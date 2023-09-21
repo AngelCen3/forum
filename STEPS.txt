@@ -1,0 +1,239 @@
+The addition of justify-end changes the alignment of the 
+elements within the flex container so that they are right-aligned
+ instead of left-aligned by default.
+
+laravel new forum
+cd forum
+composer require laravel/breeze --dev  //we create our login component
+php artisan breeze:install  
+code .
+forum  // we will create the database with the name we choose
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306        //we configure our .env file
+DB_DATABASE=forum
+DB_USERNAME=root
+DB_PASSWORD=
+
+ php artisan migrate
+ php artisan serve 
+
+- We will modify the CSS styles
+resources\views\layouts\app.blade.php
+
+resources\views\layouts\navigation.blade.php
+
+We remove the logo and change Dashboard for the word forum
+
+ //This is a component
+resources\views\components\nav-link.blade.php
+
+C:\Users\Cliente\forum\resources\views\profile\partials\delete-user-form.blade.php
+
+#-----<<<%&&&&##<<<< composer require livewire/livewire 
+
+//we create our first component
+php artisan make:livewire show-threads // Running this command created these two files
+    app\Http\Livewire\ShowThreads.php //logic
+    resources\views\livewire\show-threads.blade.php  //view
+
+We remove (welcome.blade.php and dashboard.blade.php)
+
+We will modify the routes to work with Livewire
+    \routes\web.php
+
+    Route::get('/', \App\Http\Livewire\ShowThreads::class)
+        ->middleware(['auth'])
+        ->name('dashboard');
+
+
+We added lines of code to work with Livewire
+resources\views\layouts\app.blade.php
+    @livewireStyles
+    @livewireScripts
+
+  //We add the design we want to see
+resources\views\livewire\show-threads.blade.php
+
+//We create a Category table
+php artisan make:model Category -mf
+
+  //We started to modify the migrations, what is a version control for our database
+database\migrations\2023_08_17_155244_create_categories_table.php
+            $table->string('name');
+            $table->string('color');
+
+database\factories\CategoryFactory.php
+             return [
+            'name' => fake()->word(),
+            'color' => fake()->hexColor()
+        ];
+
+database\seeders\DatabaseSeeder.php
+        public function run(): void
+    {
+        \App\Models\User::factory()->create(['email' => 'i@app.com']);
+        \App\Models\User::factory(9)->create();
+
+        \App\Models\Category::factory(10)->create();
+    }
+
+php artisan migrate:refresh --seed  //How we materialize all the information
+
+// Component on the php side
+ app\Http\Livewire\ShowThreads.php
+
+    //first we import
+    use App\Models\Category;
+    //We add --> 
+    $categories = Category::get();
+    .,['categories' => $categories
+
+    // And it would look like this
+        public function render()
+    {
+        $categories = Category::get();
+        return view('livewire.show-threads',[
+            'categories' => $categories
+        ]);
+    }
+
+
+// Component on the visual side
+resources\views\livewire\show-threads.blade.php
+@ foreach($categories as $category)
+            <li class="mb-2" >
+                <a href="" class="p-2 rounded-md flex bg-slate-800 items-center gap-2 text-white/60
+                 hover:text-white font-semibold text-xs capitalize">
+                    <span class="w-2 h-2 rounded-full" style="background-color: {{ $category->color}};"> </span>
+                    {{ $category->name}}
+                </a>
+            </li>
+@endforeach
+
+We created an entity, a migration, a factor, and developed fake data, and also made a small 
+onfiguration in the component, let's say a small configuration on the visual side and
+on the php side, that's how simple we reached this result.
+
+
+------Question Tables-----
+php artisan make:model Thread -mf
+
+database\migrations\2023_08_18_151350_create_threads_table.php
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign("user_id")
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
+            $table->string('title');
+            $table->text('body');
+
+
+database\factories\ThreadFactory.php
+            //category_id
+            'user_id' => rand(1, 10),
+            'title' => fake()->sentence(),
+            'body' => fake() ->text()
+
+\database\seeders\DatabaseSeeder.php
+    public function run(): void
+        {
+            \App\Models\User::factory()->create(['email' => 'i@app.com']);
+            \App\Models\User::factory(9)->create();
+
+            \App\Models\Category::factory(10)
+                ->hasThreads(20)
+                ->create();
+        }
+
+\app\Models\Category.php
+        public function threads()
+        {
+            return $this->hasMany(Thread::class);
+        }
+Video #8
+\app\Http\Livewire\ShowThreads.php
+    use App\Models\Thread; //import
+
+        public function render()
+    {
+        $categories = Category::get();
+        $threads =Thread::lastest()->get(); // Added to start chronologically
+
+        return view('livewire.show-threads',[
+            'categories' => $categories,
+            'threads' => $threads  //we update the information
+        ]);
+    }
+
+resources\views\livewire\show-threads.blade.php
+        <div class="w-full">
+        <!--formulario-->
+        @foreach($threads as $thread)
+        <div class="rounded-md bg-gradient-to-r from-slate-800
+         to-slate-900 hover:to-slate-800  mb-4">
+            <div class="p-4 flex gap-4">
+                <div>Imagen, avatar</div>
+            <div class="w-full">
+                <h2 class="mb-4 flex items-start justify-between ">
+                    <a href="" class="text-xl font-semibold text-white/90">
+                        {{ $thread->title }}
+                    </a>
+                    <span 
+                        class="rounded-full text-xs py-2 px-4 capitalize"
+                        style="color: #00aced; border: 1px solid #00aced;">
+                        Categoria
+                    </span>
+                </h2>
+                <p class="flex items-center justify-between w-full text-xs">
+                    <span class="text-blue-600 font-semibold">
+                        Usuario
+                        <span class="text-white/90">{{ $thread->created_at->diffForHumans()}}</span>
+                    </span>
+                    <span class="text-slate-700">Respuestas y bottom</span>
+                </p>
+            </div>
+            </div>
+        </div>
+
+        @endforeach
+    </div>    
+
+
+<!-------Video#9 Respuestas  
+php artisan make:model Reply -mf
+
+database\migrations\2023_08_30_044137_create_replies_table.php
+
+        $table->unsignedBigInteger('reply_id')   #errror#    ->nullable(); #errror#
+            $table->foreign('reply_id')
+                ->references('id')
+                ->on('replies')
+                ->onDelete('set null'); //This is one of the few changes that was made
+
+            $table->unsignedBigInteger('thread_id');
+            $table->foreign("thread_id")
+                ->references('id')
+                ->on('threads')
+                ->onDelete('cascade');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign("user_id")
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
+            $table->string('title');
+            $table->text('body');
+
+
+
+PS C:\Users\Cliente\forum> php artisan migrate:fresh --seed  //beginging to zero
