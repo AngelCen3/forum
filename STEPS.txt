@@ -1,3 +1,13 @@
+//do the query in controller
+// to dowload to git wi have to execute 
+        composer install 
+        create a file .env
+        npm install
+        php artisan key:generate   //create a key to proyect
+        php artisan migrate
+//descoment ;extencion: zip ---- in php.ini
+
+
 The addition of justify-end changes the alignment of the 
 elements within the flex container so that they are right-aligned
  instead of left-aligned by default.

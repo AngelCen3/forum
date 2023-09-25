@@ -10,6 +10,6 @@ class Thread extends Model
     use HasFactory;
 
     public function user(){
-        return $this->belongsTo();
+        return $this->belongsTo(User::class);
     }
 }
