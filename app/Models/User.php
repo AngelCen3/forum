@@ -42,4 +42,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    //this function is to call the icon
+    public function avatar(){
+        return 'https://gravatar.com/avatar/' .md5($this->email) . '?s=50';
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
 }

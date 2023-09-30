@@ -4,8 +4,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', \App\Http\Livewire\ShowThreads::class)
-    ->middleware(['auth'])
+    ->middleware('auth')
     ->name('dashboard');
+
+Route::get('/thread/{thread}', \App\Http\Livewire\ShowThread::class)
+    ->middleware('auth')
+    ->name('thread');
 
 //Route::get(/prueba);
 

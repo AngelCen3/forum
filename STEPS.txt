@@ -2,22 +2,48 @@ The addition of justify-end changes the alignment of the
 elements within the flex container so that they are right-aligned
  instead of left-aligned by default.
 
+the search is implicit   //that do automaticli
+"terminal.integrated.defaultProfile.windows": "PowerShell",
+ ***************begin***********************
+                    Buenas, hace unas semanas livewire tuvo algunos cambios, los cambios que interesan para está clase son:
+                    Antes -> App/Http/livewire/ShowThreads
+                    ahora->App/livewire/ShowThreads
+                    Archivo config de livewire deben modificar y agregar lo siguiente : ‘layout’ => ‘layouts.app’, háganlo únicamente si tienen el siguiente error Livewire page component layout view not found: [components.layouts.app]
+
+                    Espero les sirva
+
+                    /////////////////////////////////
+                    Hola william, Si no puedes encontrar el archivo
+                    en la carpeta config, ejecuta el comando php 
+                    artisan livewire:publish --config para publicar
+                    el archivo de configuración.
+
+ ***************end*************************
+
 laravel new forum
 cd forum
-composer require laravel/breeze --dev  //we create our login component
+ //we create our login component
+composer require laravel/breeze --dev
 php artisan breeze:install  
 code .
 forum  // we will create the database with the name we choose
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
-DB_PORT=3306        //we configure our .env file
+DB_PORT=3306        //We configure our .env file
 DB_DATABASE=forum
 DB_USERNAME=root
 DB_PASSWORD=
 
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306 
+DB_DATABASE=forum    
+DB_USERNAME=beto    //With WSL ubuntu
+DB_PASSWORD=toor
+
  php artisan migrate
- php artisan serve 
+ php artisan serve //I have a problen with this in ubuntu (sudo apt-get install php-curl php-xsl php-xml)
 
 - We will modify the CSS styles
 resources\views\layouts\app.blade.php
@@ -44,7 +70,7 @@ We will modify the routes to work with Livewire
     \routes\web.php
 
     Route::get('/', \App\Http\Livewire\ShowThreads::class)
-        ->middleware(['auth'])
+        ->middleware('auth')
         ->name('dashboard');
 
 
