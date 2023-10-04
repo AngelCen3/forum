@@ -273,3 +273,6 @@ database\migrations\2023_08_30_044137_create_replies_table.php
 
 
 PS C:\Users\Cliente\forum> php artisan migrate:fresh --seed  //beginging to zero
+
+----Video #25
+    composer require barryvdh/laravel-debugbar --dev    //Able a bug bar

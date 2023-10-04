@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class ShowThreads extends Component
 {
-
+    
     public $search = '';
     public $category = '';
 
@@ -28,6 +28,8 @@ class ShowThreads extends Component
         if($this->category){
             $threads->where('category_id', $this->category);
         }
+
+        $threads->with('user', 'category');  //To improve querys we add this line 
         $threads ->withCount('replies');
         $threads ->latest();
 

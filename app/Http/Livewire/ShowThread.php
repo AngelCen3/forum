@@ -28,6 +28,7 @@ class ShowThread extends Component
             'replies' => $this->thread
             ->replies()
             ->whereNull('reply_id')
+            ->with('user', 'replies.user', 'replies.replies')  //To improve query I wanna like to print directly create´s user
             ->get()
         ]);
     }
